@@ -1,0 +1,1 @@
+Cada captura evidencia una etapa del desarrollo del ejercico, primero la captura donde se pide por consola la url, luego la captura donde se muestra el correcto funcionamiento del programa y finalmente la captura donde se ve como se realiza la "copia" del html de la url y su visualización en el archivo Resultado.html
