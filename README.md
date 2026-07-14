@@ -1,190 +1,190 @@
-# Introducción a Esquemas de Nombres, Redes, Clientes y Servicios con Java
+# Introduction to Naming Schemes, Networks, Clients and Services with Java
 
-Este repositorio contiene la solución extensa y completa al taller práctico de la asignatura de **Arquitectura de Software (ARSW)** enfocado en la programación de redes en Java. El objetivo principal de este proyecto es explorar, comprender y aplicar los conceptos fundamentales que rigen las comunicaciones a través de internet y redes locales. Entre los temas abarcados se encuentran el uso de protocolos de red orientados a conexión (TCP) y no orientados a conexión (UDP), la manipulación y lectura de URLs, la implementación de Servidores Web básicos y el desarrollo de sistemas distribuidos mediante RMI (Remote Method Invocation).
+This repository contains the extensive and complete solution to the practical workshop for the **Software Architecture (ARSW)** course, focused on network programming in Java. The main goal of this project is to explore, understand, and apply the fundamental concepts that govern communication over the internet and local networks. Topics covered include connection-oriented (TCP) and connectionless (UDP) network protocols, URL parsing and manipulation, the implementation of basic Web Servers, and the development of distributed systems using RMI (Remote Method Invocation).
 
-A continuación, se detalla el contenido de cada uno de los ejercicios desarrollados, especificando su objetivo pedagógico, una explicación exhaustiva de su funcionamiento interno a nivel de código y arquitectura, y las instrucciones precisas para su correcta compilación y ejecución.
-
----
-
-## Ejercicio 1: Exploración y Desglose de la Clase URL
-
-**Objetivo:** 
-Comprender la anatomía de un Localizador Uniforme de Recursos (URL) y aprender a extraer programáticamente cada uno de sus componentes individuales haciendo uso de la API estándar de red provista por Java (`java.net.URL`).
-
-**Cómo funciona:** 
-El programa define una cadena de texto estática que representa una URL compleja, la cual incluye protocolo, nombre de host, puerto, ruta de acceso, parámetros de consulta (query) y fragmentos de referencia. Se instancia un objeto de la clase `URL` con dicha cadena. Aunque constructores basados en strings han sido marcados como deprecados en versiones recientes de Java en favor de la clase `URI`, el ejercicio demuestra su utilidad práctica. A través del objeto instanciado, el sistema invoca secuencialmente los métodos de extracción de la API (tales como `getProtocol()`, `getHost()`, `getPort()`, `getPath()`, `getQuery()`, `getFile()`, y `getRef()`), imprimiendo los resultados detallados en la salida estándar de la consola. Esto permite validar cómo Java descompone y entiende internamente una dirección web.
-
-**Instrucciones de Ejecución:**
-1. Navegue a través de la terminal hasta el directorio `ejercicio1`.
-2. Compile el código fuente ejecutando el comando: `javac URLInfoPrinter.java` (reemplace el nombre si fue modificado en su entorno local).
-3. Inicie la aplicación ejecutando: `java URLInfoPrinter`
-4. Inspeccione en la consola el desglose exhaustivo de los componentes que conforman la URL de prueba.
-
-> **Espacio para Evidencia - Ejercicio 1:**
-> [Inserte aquí la captura de pantalla evidenciando la salida por consola del desglose de la URL]
-> ![Evidencia Ejercicio 1](./imagenes/ejercicio1.png)
+Below is a detailed breakdown of each exercise developed, specifying its pedagogical objective, an exhaustive explanation of its internal workings at the code and architecture level, and the precise instructions for compiling and running it correctly.
 
 ---
 
-## Ejercicio 2: Aplicación Browser (Lector y Almacenador de URL)
+## Exercise 1: Exploring and Breaking Down the URL Class
 
-**Objetivo:** 
-Desarrollar una aplicación capaz de establecer una conexión HTTP básica a una URL proporcionada por el usuario, leer el flujo de datos resultante (típicamente código fuente HTML) y persistir dicha información en el almacenamiento local del sistema.
+**Objective:**
+Understand the anatomy of a Uniform Resource Locator (URL) and learn how to programmatically extract each of its individual components using the standard networking API provided by Java (`java.net.URL`).
 
-**Cómo funciona:** 
-La aplicación solicita al usuario ingresar una dirección URL a través de la consola empleando la clase `Scanner` o `BufferedReader`. Una vez obtenida y validada la cadena, el sistema crea un objeto `URL` y procede a invocar el método `openStream()`. Este método devuelve un flujo de entrada (InputStream) asociado a la conexión de red. El programa encapsula este flujo dentro de un `BufferedReader` para optimizar la lectura línea por línea del documento remoto. De manera simultánea, se instancia un flujo de salida (ej. `PrintWriter` o `FileWriter`) apuntando a un archivo local denominado `Resultado.html`. A través de un bucle, el sistema itera sobre cada línea leída del servidor remoto y la escribe inmediatamente en el archivo local, logrando efectivamente clonar el código fuente de la página solicitada.
+**How it works:**
+The program defines a static string representing a complex URL, one that includes protocol, host name, port, path, query parameters, and a reference fragment (`http://ldbn.escuelaing.edu.co:80/index.html?param=value#section1`). A `URL` object is instantiated from that string. Although string-based constructors have been marked deprecated in recent Java versions in favor of the `URI` class, the exercise demonstrates their practical use for teaching purposes. Through the instantiated object, the program sequentially invokes the API's extraction methods (`getProtocol()`, `getAuthority()`, `getHost()`, `getPort()`, `getPath()`, `getQuery()`, `getFile()`, and `getRef()`), printing the detailed results to the standard console output. This allows one to validate how Java internally decomposes and interprets a web address.
 
-**Instrucciones de Ejecución:**
-1. Navegue a través de la terminal hasta el directorio `ejercicio2`.
-2. Compile el código fuente ejecutando el comando: `javac AplicacionBrowser.java`
-3. Inicie la aplicación ejecutando: `java AplicacionBrowser`
-4. Cuando el programa lo solicite, ingrese una URL válida y con el protocolo explícito (por ejemplo, `http://www.google.com/`).
-5. Navegue en su explorador de archivos hacia la carpeta del proyecto y abra el archivo resultante `Resultado.html` utilizando su navegador web de preferencia para visualizar la página clonada.
+**Execution Instructions:**
+1. Navigate through the terminal to the `ejercicio1` directory.
+2. Compile the source code by running: `javac URLInfoPrinter.java` (adjust the name if it was modified in your local environment).
+3. Start the application by running: `java URLInfoPrinter`
+4. Inspect the console for the full breakdown of the components that make up the test URL.
 
-> **Espacio para Evidencia - Ejercicio 2:**
-> [Inserte aquí la captura de pantalla evidenciando la solicitud de la URL en consola y el navegador renderizando el archivo Resultado.html local]
-> ![Evidencia Ejercicio 2](./imagenes/ejercicio2.png)
-
----
-
-## Ejercicio 4.3.1: Arquitectura Cliente-Servidor TCP Básica (Cálculo de Cuadrados)
-
-**Objetivo:** 
-Implementar y comprender el funcionamiento de la comunicación bidireccional entre un cliente y un servidor utilizando el protocolo TCP (Transmission Control Protocol), el cual garantiza la entrega secuencial y confiable de paquetes de datos a través de Sockets en Java.
-
-**Cómo funciona:** 
-La arquitectura se divide en dos componentes independientes que se comunican a través de un puerto de red previamente acordado.
-- **El Servidor (`SquareServer.java`):** Instancia un objeto `ServerSocket` vinculado al puerto lógico `35000`. Posteriormente, invoca el método bloqueante `accept()`, deteniendo el hilo de ejecución hasta que un cliente intente conectarse. Al establecer la conexión, obtiene los flujos de entrada y salida del `Socket` resultante. Lee la cadena de texto enviada por el cliente, la convierte a un tipo de dato numérico (`Double`), calcula su cuadrado multiplicando el valor por sí mismo y retorna el resultado formateado a través del flujo de salida hacia el cliente.
-- **El Cliente (`SquareClient.java`):** Instancia un objeto `Socket` indicando la dirección IP local (`127.0.0.1`) y el puerto de destino (`35000`). Luego, entra en un ciclo donde captura las entradas del usuario a través de la terminal, las transmite por el flujo de salida del Socket hacia el servidor, y se queda en espera de la respuesta. Una vez recibida la respuesta calculada por el servidor, la imprime en pantalla.
-
-**Instrucciones de Ejecución:**
-1. Abra una terminal, navegue hasta el directorio `ejercicio4.3.1` y compile el servidor: `javac SquareServer.java`
-2. Inicie el proceso del servidor: `java SquareServer`
-3. Abra una **segunda terminal** (sin cerrar la primera), navegue al mismo directorio y compile el cliente: `javac SquareClient.java`
-4. Inicie el proceso del cliente: `java SquareClient`
-5. En la terminal del cliente, ingrese valores numéricos y presione Enter para observar cómo el servidor remoto procesa la solicitud y retorna el resultado al instante.
-
-> **Espacio para Evidencia - Ejercicio 4.3.1:**
-> [Inserte aquí una captura mostrando ambas terminales (cliente y servidor) interactuando y procesando los números ingresados]
-> ![Evidencia Ejercicio 4.3.1](./imagenes/ejercicio4.3.1.png)
+> **Evidence Placeholder - Exercise 1:**
+> [Insert here a screenshot showing the console output of the URL breakdown]
+> ![Evidence Exercise 1](./imagenes/ejercicio1.png)
 
 ---
 
-## Ejercicio 4.3.2: Servidor de Operaciones Matemáticas Dinámicas (Trigonometría)
+## Exercise 2: Browser Application (URL Reader and Saver)
 
-**Objetivo:** 
-Extender el modelo Cliente-Servidor TCP tradicional incorporando el manejo de estados persistentes dentro de la sesión del servidor, permitiendo alterar dinámicamente el comportamiento del sistema basado en comandos específicos enviados por el cliente.
+**Objective:**
+Develop an application capable of establishing a basic HTTP connection to a URL provided by the user, reading the resulting data stream (typically HTML source code), and persisting that information to local storage.
 
-**Cómo funciona:** 
-Este ejercicio es una iteración avanzada del ejercicio anterior. El servidor se inicializa con un estado por defecto, configurado para calcular la función matemática "Coseno". Dentro del ciclo de lectura de datos provenientes del cliente, el servidor implementa lógica de enrutamiento condicional. Si la cadena recibida inicia con un prefijo especial reservado (específicamente `fun:` seguido de `sin`, `cos` o `tan`), el servidor no intenta realizar una operación matemática, sino que actualiza su estado interno registrando la nueva función a ejecutar. Si la entrada no contiene el prefijo, el servidor asume que es un valor numérico, revisa su estado actual y aplica la función trigonométrica correspondiente mediante la librería `Math` de Java. El resultado es formateado para mostrar qué operación fue aplicada sobre el valor y se retorna al cliente, demostrando cómo una sola conexión puede evolucionar en su contexto de ejecución.
+**How it works:**
+The application asks the user to enter a URL through the console using the `Scanner` class. Once the string has been read, the program builds a `URI` from it and converts it into a `URL` via `new URI(direccion).toURL()` — the modern, non-deprecated way of obtaining a `URL` instance — and then invokes `openStream()` on it. This method returns an input stream (`InputStream`) tied to the network connection. The program wraps this stream in a `BufferedReader` to read the remote document line by line. At the same time, it opens a `BufferedWriter` around a `FileWriter` pointing to a local file named `Resultado.html`. In a loop, the program reads each line coming from the remote server and immediately writes it to the local file (adding a newline after each one), effectively cloning the source code of the requested page.
 
-**Instrucciones de Ejecución:**
-1. Abra una terminal, navegue hasta la carpeta `ejercicio4.3.2` y compile ambos archivos: `javac TrigServer.java TrigClient.java`
-2. Ejecute el servidor: `java TrigServer`
-3. En una nueva terminal, ejecute el cliente: `java TrigClient`
-4. Ingrese valores numéricos para observar la ejecución de la función por defecto (Coseno).
-5. Ingrese explícitamente comandos como `fun:sin` o `fun:tan` para alterar el estado del servidor, y luego ingrese nuevos números para verificar el cambio de operación matemática.
+**Execution Instructions:**
+1. Navigate through the terminal to the `ejercicio2` directory.
+2. Compile the source code by running: `javac AplicacionBrowser.java`
+3. Start the application by running: `java AplicacionBrowser`
+4. When prompted, enter a valid URL including the explicit protocol (for example, `http://www.google.com/`).
+5. In your file explorer, go to the project folder and open the resulting `Resultado.html` file with your web browser of choice to view the cloned page.
 
-> **Espacio para Evidencia - Ejercicio 4.3.2:**
-> [Inserte aquí una captura de la consola del cliente demostrando la transición exitosa entre las diferentes funciones trigonométricas]
-> ![Evidencia Ejercicio 4.3.2](./imagenes/ejercicio4.3.2.png)
-
----
-
-## Ejercicio 4.4: Servidor Web Primario (Respuesta Estática de Petición Única)
-
-**Objetivo:** 
-Desmitificar el funcionamiento de los servidores web modernos mediante la construcción de un programa nativo en Java capaz de interpretar peticiones HTTP puras y responder con documentos formateados que un navegador comercial pueda renderizar de manera adecuada.
-
-**Cómo funciona:** 
-El programa `HttpServer.java` crea un `ServerSocket` asociado al puerto `35000`. Al acceder desde un navegador web estandarizado (Chrome, Firefox, etc.) empleando la dirección `localhost:35000`, el navegador establece una conexión TCP y despacha inmediatamente un bloque de texto plano que conforma la petición HTTP (incluyendo el método `GET`, la ruta, la versión del protocolo y los múltiples encabezados o "Headers" descriptivos). El servidor escrito en Java lee este bloque secuencialmente mediante un `BufferedReader` y lo imprime en la consola del desarrollador, lo cual sirve para ilustrar cómo lucen verdaderamente las transacciones en la web. Al terminar de leer la petición, el servidor responde estructurando cuidadosamente un paquete HTTP válido, el cual incluye la línea de estado `HTTP/1.1 200 OK`, el encabezado estricto `Content-Type: text/html` y un par de saltos de línea obligatorios. Finalmente, envía un pequeño documento HTML estático y cierra los flujos, finalizando la conexión.
-
-**Instrucciones de Ejecución:**
-1. Navegue a la carpeta `ejercicio4.4` y compile el servidor: `javac HttpServer.java`
-2. Ejecute el servidor: `java HttpServer`
-3. Abra su navegador web de preferencia y diríjase a la barra de direcciones, introduciendo: `http://localhost:35000/`
-4. Revise simultáneamente la pantalla del navegador (para visualizar el HTML renderizado) y la terminal donde se ejecuta el servidor (para examinar los headers que el navegador envió por debajo).
-
-> **Espacio para Evidencia - Ejercicio 4.4:**
-> [Inserte aquí una imagen compartida mostrando el navegador renderizando el título y la consola mostrando el bloque del GET request]
-> ![Evidencia Ejercicio 4.4](./imagenes/ejercicio4.4.png)
+> **Evidence Placeholder - Exercise 2:**
+> [Insert here a screenshot showing the URL prompt in the console and the browser rendering the local Resultado.html file]
+> ![Evidence Exercise 2](./imagenes/ejercicio2.png)
 
 ---
 
-## Ejercicio 4.5.1: Servidor Web Multipetición con Soporte para Archivos Estáticos
+## Exercise 4.3.1: Basic TCP Client-Server Architecture (Square Calculator)
 
-**Objetivo:** 
-Evolucionar el servidor web estático hacia un servicio continuo capaz de analizar las rutas solicitadas dinámicamente, localizar los recursos físicos en el disco duro y retornar los bytes correspondientes junto con sus tipos MIME adecuados, manteniéndose en ejecución prolongada.
+**Objective:**
+Implement and understand bidirectional communication between a client and a server using the TCP (Transmission Control Protocol) protocol, which guarantees reliable, in-order delivery of data packets through Java Sockets.
 
-**Cómo funciona:** 
-El código de `HttpServerMulti.java` incorpora el ciclo de vida de conexión dentro de una estructura `while(true)`, garantizando que el `ServerSocket` vuelva a ejecutar el método `accept()` inmediatamente tras finalizar una transacción, previniendo el apagado automático de la aplicación. Cuando recibe una petición HTTP, el servidor descompone (mediante la función `split`) la línea inicial (ej. `GET /recurso.png HTTP/1.1`) para aislar la ruta solicitada. Posteriormente, concatena esta ruta a un directorio interno denominado `public/` y emplea la API `java.nio.file.Files` para validar si el archivo existe en el sistema. De ser encontrado, el servidor lee los bytes en bruto, invoca un método interno para determinar la naturaleza del archivo basado en su extensión (otorgando el Content-Type correcto como `text/css`, `image/jpeg` o `text/html`), y finalmente despacha la respuesta íntegra a través del `OutputStream`. Si el archivo no existe, retorna graciosamente un error HTTP `404 Not Found`.
+**How it works:**
+The architecture is split into two independent components that communicate over a previously agreed-upon network port.
+- **The Server (`SquareServer.java`):** Instantiates a `ServerSocket` bound to logical port `35000`. It then invokes the blocking method `accept()`, halting execution until a client attempts to connect. Once the connection is established, it obtains the input and output streams of the resulting `Socket`. It reads the text line sent by the client, parses it into an integer value (`Integer.parseInt`), computes its square by multiplying the value by itself, and returns the formatted result ("Cuadrado: X") through the output stream back to the client. If the received text cannot be parsed as an integer, it responds with an error message instead of crashing.
+- **The Client (`SquareClient.java`):** Instantiates a `Socket` pointing at the local IP address (`127.0.0.1`) and the destination port (`35000`). It then enters a loop where it captures user input from the terminal, sends it through the socket's output stream to the server, and waits for the response. Once it receives the result computed by the server, it prints it to the screen.
 
-**Instrucciones de Ejecución:**
-1. Sitúese en el directorio `ejercicio4.5.1` y asegúrese de que el código esté compilado: `javac HttpServerMulti.java`
-2. Verifique la existencia de la carpeta `public` que contenga archivos de prueba (como `index.html` o recursos de imagen).
-3. Inicie la ejecución del servidor: `java HttpServerMulti`
-4. Abra su navegador web e ingrese a `http://localhost:35000/index.html`. 
-5. Intente recargar la página numerosas veces o solicite recursos inexistentes para verificar cómo el servidor procesa y mantiene su estabilidad frente a peticiones consecutivas y errores 404.
+**Execution Instructions:**
+1. Open a terminal, navigate to the `ejercicio4.3.1` directory, and compile the server: `javac SquareServer.java`
+2. Start the server process: `java SquareServer`
+3. Open a **second terminal** (without closing the first one), navigate to the same directory, and compile the client: `javac SquareClient.java`
+4. Start the client process: `java SquareClient`
+5. In the client terminal, enter integer values and press Enter to see how the remote server processes the request and returns the result instantly.
 
-> **Espacio para Evidencia - Ejercicio 4.5.1:**
-> [Inserte aquí las capturas de la página web renderizada en el navegador y las salidas de consola que muestran las peticiones consecutivas gestionadas por el ciclo while]
-> ![Evidencia Ejercicio 4.5.1](./imagenes/ejercicio4.5.1.png)
-
----
-
-## Ejercicio 5.2.1: Sincronización Temporal Utilizando Datagramas UDP
-
-**Objetivo:** 
-Construir e interactuar con aplicaciones fundamentadas en el protocolo UDP (User Datagram Protocol). A diferencia de TCP, UDP no mantiene una conexión abierta, ni verifica el orden o la llegada de la información. El ejercicio busca crear resiliencia en un cliente frente a pérdidas de paquetes o caídas del servidor.
-
-**Cómo funciona:** 
-- **El Servidor (`DatagramTimeServer.java`):** Instancia un `DatagramSocket` escuchando en el puerto `4445`. Por medio de un ciclo infinito, aguarda pasivamente recibir un paquete (`DatagramPacket`). Al registrar la llegada de un paquete, extrae instantáneamente la dirección IP y el puerto de origen de quien lo envió, obtiene la hora actual del sistema mediante el objeto `Date`, la convierte en un arreglo de bytes, empaqueta la información en un nuevo `DatagramPacket` dirigido al remitente y lo envía.
-- **El Cliente (`DatagramTimeClient.java`):** Implementa un ciclo controlado que envía una solicitud vacía hacia el puerto del servidor cada cinco segundos. La característica vital de este cliente es la invocación de `socket.setSoTimeout(2000)`. Al no ser una conexión TCP garantizada, si el servidor sufriera una falla crítica o una desconexión en medio de la transacción, el cliente quedaría bloqueado eternamente esperando un paquete que jamás llegará. El timeout establecido asegura que, tras dos segundos de espera infructuosa, el sistema lance una excepción `SocketTimeoutException`. El bloque `catch` atrapa dicha excepción, previene el cierre inesperado del programa y continúa mostrando en pantalla la última hora válida almacenada previamente en memoria, reanudando la operación regular cuando el servidor retome el servicio.
-
-**Instrucciones de Ejecución:**
-1. Navegue al directorio `ejercicio5.2.1` y compile ambos componentes: `javac DatagramTimeServer.java DatagramTimeClient.java`
-2. En una terminal, inicie la ejecución del servidor de tiempo: `java DatagramTimeServer`
-3. En una segunda terminal independiente, inicie el cliente: `java DatagramTimeClient`
-4. Permita que el sistema sincronice el tiempo durante varias iteraciones.
-5. Emule una interrupción abrupta finalizando el proceso del servidor (utilizando `Ctrl+C`). Observe el comportamiento resiliente de la terminal del cliente, el cual deberá notificar la incapacidad de conexión pero mantendrá la operación empleando su última lectura, sobreviviendo la caída. Inicie el servidor nuevamente para observar su recuperación automática.
-
-> **Espacio para Evidencia - Ejercicio 5.2.1:**
-> [Inserte aquí las capturas evidenciando el funcionamiento normal seguido de la captura mostrando el manejo de errores al desconectar el servidor]
-> ![Evidencia Ejercicio 5.2.1](./imagenes/ejercicio5.2.1.png)
+> **Evidence Placeholder - Exercise 4.3.1:**
+> [Insert here a screenshot showing both terminals (client and server) interacting and processing the entered numbers]
+> ![Evidence Exercise 4.3.1](./imagenes/ejercicio4.3.1.png)
 
 ---
 
-## Ejercicio 6.4.1: Sistema de Chat P2P Transparente Mediante Java RMI
+## Exercise 4.3.2: Dynamic Math Operations Server (Trigonometry)
 
-**Objetivo:** 
-Aplicar los conceptos avanzados de Remote Method Invocation (RMI) para abstraer por completo la complejidad intrínseca del envío de flujos de bytes sobre la red. RMI permite a un programa invocar métodos de objetos que residen en una Máquina Virtual de Java (JVM) distante como si fuesen invocaciones estrictamente locales.
+**Objective:**
+Extend the traditional TCP Client-Server model by incorporating persistent state within the server session, allowing the system's behavior to be dynamically altered based on specific commands sent by the client.
 
-**Cómo funciona:** 
-El sistema abandona el paradigma clásico de un servidor central. La clase `ChatApp.java` ostenta un diseño Peer-to-Peer (P2P), actuando simultáneamente en dos roles indispensables:
-- **Como Servidor:** Implementa la interfaz compartida `ChatService` que extiende a `java.rmi.Remote`. Durante la inicialización, la aplicación exporta su propia instancia local como un "stub" (objeto proxy encargado de la serialización) utilizando `UnicastRemoteObject.exportObject`. Acto seguido, genera programáticamente su propio registro (`LocateRegistry.createRegistry`) en un puerto local especificado dinámicamente por el usuario, y se vincula bajo el nombre "ChatService". 
-- **Como Cliente:** Solicita interactivamente los datos del destinatario deseado (dirección IP y puerto). A través del método estático `LocateRegistry.getRegistry`, la aplicación rastrea la JVM remota y utiliza la función de búsqueda o `lookup` para localizar el objeto remoto bautizado como "ChatService".
-- **El flujo de datos:** Una vez establecidas las interfaces, cuando el usuario escribe una cadena de texto en consola, el sistema no gestiona sockets manualmente. Simplemente ejecuta la sentencia de código `remoteService.receiveMessage(username, msg)`. El framework RMI de Java serializa los objetos por debajo, los transmite por la red, ejecuta el código en el computador remoto del destinatario de manera transparente y produce un resultado en su terminal en tiempo real.
+**How it works:**
+This exercise is an advanced iteration of the previous one. The server starts with a default state configured to compute the "Cosine" math function. Inside the loop that reads data coming from the client, the server implements conditional routing logic. If the received string starts with a reserved special prefix (specifically `fun:` followed by `sin`, `cos`, or `tan` — the Spanish variants `seno`, `coseno`, and `tangente` are also accepted), the server does not attempt a math operation; instead it updates its internal state, recording the new function to apply, and confirms the change back to the client. If the input does not contain that prefix, the server assumes it is a numeric value, checks its current state, and applies the corresponding trigonometric function using Java's `Math` library. The result is formatted to show which operation was applied to the value and is returned to the client, demonstrating how a single connection can evolve its execution context over time.
 
-**Instrucciones de Ejecución:**
-*(Para este escenario, se aconseja el uso de dos consolas simulando entornos separados)*
-1. Sitúese en el directorio `ejercicio6.4.1` y ejecute la compilación del paquete de clases: `javac ChatService.java ChatApp.java`
-2. En su primera consola (representando a un usuario, por ejemplo, "Alice"), ejecute la aplicación: `java ChatApp`
-   - **Parámetro 1 (Nombre):** Ingrese un nombre identificador (ej. Alice)
-   - **Parámetro 2 (Puerto Local):** Digite un puerto disponible (ej. 23000)
-   - **Parámetro 3 (IP Destino):** Escriba `127.0.0.1`
-   - *Nota de Operación:* No presione la tecla de ingreso para el puerto de destino hasta que el segundo cliente esté en plena ejecución, o la aplicación reportará la incapacidad de conectarse.
-3. En su segunda consola (representando a "Bob"), inicie una instancia paralela: `java ChatApp`
-   - **Parámetro 1 (Nombre):** Ingrese un nombre identificador (ej. Bob)
-   - **Parámetro 2 (Puerto Local):** Digite un puerto distinto para evitar colisiones (ej. 23001)
-   - **Parámetro 3 (IP Destino):** Escriba `127.0.0.1`
-   - **Parámetro 4 (Puerto Destino):** Ingrese el puerto designado para Alice (`23000`)
-4. Regrese velozmente a la consola número uno y complete el registro ingresando el puerto asignado para Bob (`23001`).
-5. Redacte e intercambie cadenas de texto entre ambas terminales. Observe cómo los parámetros complejos del tipo String viajan a través de los objetos abstractos RMI para invocar las notificaciones locales del otro entorno JVM de manera instantánea.
+**Execution Instructions:**
+1. Open a terminal, navigate to the `ejercicio4.3.2` folder, and compile both files: `javac TrigServer.java TrigClient.java`
+2. Run the server: `java TrigServer`
+3. In a new terminal, run the client: `java TrigClient`
+4. Enter numeric values to observe the default function (Cosine) being applied.
+5. Explicitly enter commands such as `fun:sin` or `fun:tan` to change the server's state, then enter new numbers to verify the change in the math operation being applied.
 
-> **Espacio para Evidencia - Ejercicio 6.4.1:**
-> [Inserte aquí capturas conjuntas de ambas consolas (Alice y Bob) compartiendo y respondiendo a los mensajes en tiempo real empleando la arquitectura RMI]
-> ![Evidencia Ejercicio 6.4.1](./imagenes/ejercicio6.4.1.png)
+> **Evidence Placeholder - Exercise 4.3.2:**
+> [Insert here a screenshot of the client console showing the successful transition between the different trigonometric functions]
+> ![Evidence Exercise 4.3.2](./imagenes/ejercicio4.3.2.png)
 
 ---
 
-**Proyecto Documentado para la Materia de Arquitectura de Software.**
+## Exercise 4.4: Basic Web Server (Static Single-Request Response)
+
+**Objective:**
+Demystify how modern web servers work by building a native Java program capable of parsing raw HTTP requests and responding with formatted documents that a commercial browser can properly render.
+
+**How it works:**
+The program `HttpServer.java` creates a `ServerSocket` bound to port `35000`. When accessed from a standard web browser (Chrome, Firefox, etc.) using the address `localhost:35000`, the browser opens a TCP connection and immediately sends a plain-text block that makes up the HTTP request (including the `GET` method, the path, the protocol version, and the various descriptive "Headers"). The Java server reads this block sequentially through a `BufferedReader` and prints it to the developer's console, illustrating what web transactions actually look like under the hood; it stops reading once the input stream reports no more data is immediately available (`in.ready()` returns false). After finishing the request, the server responds by carefully assembling a valid HTTP packet, which includes the status line `HTTP/1.1 200 OK`, the `Content-Type: text/html` header, and the required blank line separating headers from the body. Finally, it sends a small static HTML document and closes the streams, ending the connection. Because the server only calls `accept()` once (there is no surrounding loop), it serves exactly one request per run and then terminates.
+
+**Execution Instructions:**
+1. Navigate to the `ejercicio4.4` folder and compile the server: `javac HttpServer.java`
+2. Run the server: `java HttpServer`
+3. Open your preferred web browser and go to the address bar, entering: `http://localhost:35000/`
+4. Check both the browser screen (to view the rendered HTML) and the terminal running the server (to examine the headers the browser sent behind the scenes).
+
+> **Evidence Placeholder - Exercise 4.4:**
+> [Insert here a combined image showing the browser rendering the title and the console showing the GET request block]
+> ![Evidence Exercise 4.4](./imagenes/ejercicio4.4.png)
+
+---
+
+## Exercise 4.5.1: Multi-Request Web Server with Static File Support
+
+**Objective:**
+Evolve the static web server into a long-running service capable of dynamically parsing requested paths, locating the corresponding physical resources on disk, and returning the matching bytes along with their proper MIME types, all while remaining continuously active.
+
+**How it works:**
+The code in `HttpServerMulti.java` wraps the connection lifecycle inside a `while(true)` loop, ensuring the `ServerSocket` immediately calls `accept()` again after finishing a transaction, preventing the application from shutting down automatically. When it receives an HTTP request, the server splits (using `split(" ")`) the initial request line (e.g. `GET /recurso.png HTTP/1.1`) to isolate the requested path (defaulting `/` to `/index.html`). It then prepends this path with an internal directory named `public/` and uses the `java.nio.file.Files` API to check whether the file exists on the filesystem and is not a directory. If found, the server reads the raw bytes, calls an internal method to determine the file's nature based on its extension (assigning the correct Content-Type such as `text/css`, `image/png`, `image/jpeg`, `application/javascript`, or defaulting to `text/plain`), sends the headers (`200 OK`, `Content-Type`, `Content-Length`) followed by a blank line, and finally dispatches the raw bytes through the `OutputStream`. If the file does not exist, it gracefully returns an HTTP `404 Not Found` response with a small HTML body.
+
+**Execution Instructions:**
+1. Go to the `ejercicio4.5.1` directory and make sure the code is compiled: `javac HttpServerMulti.java`
+2. Verify that the `public` folder exists and contains test files (such as `index.html` or image resources).
+3. Start the server: `java HttpServerMulti`
+4. Open your web browser and go to `http://localhost:35000/index.html`.
+5. Try reloading the page several times or requesting nonexistent resources to verify how the server handles and remains stable across consecutive requests and 404 errors.
+
+> **Evidence Placeholder - Exercise 4.5.1:**
+> [Insert here screenshots of the rendered web page in the browser and the console output showing the consecutive requests handled by the while loop]
+> ![Evidence Exercise 4.5.1](./imagenes/ejercicio4.5.1.png)
+
+---
+
+## Exercise 5.2.1: Time Synchronization Using UDP Datagrams
+
+**Objective:**
+Build and interact with applications based on the UDP (User Datagram Protocol) protocol. Unlike TCP, UDP does not keep an open connection and does not verify the order or arrival of data. This exercise aims to build resilience in a client facing packet loss or server outages.
+
+**How it works:**
+- **The Server (`DatagramTimeServer.java`):** Instantiates a `DatagramSocket` listening on port `4445`. Through an infinite loop, it passively waits to receive a packet (`DatagramPacket`). Upon a packet's arrival, it instantly extracts the sender's IP address and origin port, obtains the current system time via the `Date` object, converts it to a byte array, packages the information into a new `DatagramPacket` addressed to the sender, and sends it back.
+- **The Client (`DatagramTimeClient.java`):** Implements a controlled loop that sends an empty request to the server's port every five seconds. The critical feature of this client is the call to `socket.setSoTimeout(2000)`. Since UDP does not guarantee a connection, if the server were to suffer a critical failure or become disconnected mid-transaction, the client would otherwise block forever waiting for a packet that will never arrive. The configured timeout ensures that, after two seconds of unsuccessful waiting, the system throws a `SocketTimeoutException`. The `catch` block traps that exception, prevents the program from crashing unexpectedly, and keeps displaying the last valid time previously stored in memory, resuming normal operation once the server comes back online.
+
+**Execution Instructions:**
+1. Navigate to the `ejercicio5.2.1` directory and compile both components: `javac DatagramTimeServer.java DatagramTimeClient.java`
+2. In one terminal, start the time server: `java DatagramTimeServer`
+3. In a second, independent terminal, start the client: `java DatagramTimeClient`
+4. Let the system synchronize the time over several iterations.
+5. Simulate an abrupt interruption by terminating the server process (using `Ctrl+C`). Observe the resilient behavior of the client terminal, which should report that the server is unreachable but keep running using its last known reading, surviving the outage. Start the server again to observe its automatic recovery.
+
+> **Evidence Placeholder - Exercise 5.2.1:**
+> [Insert here screenshots showing normal operation followed by a screenshot showing the error handling when the server is disconnected]
+> ![Evidence Exercise 5.2.1](./imagenes/ejercicio5.2.1.png)
+
+---
+
+## Exercise 6.4.1: Transparent P2P Chat System Using Java RMI
+
+**Objective:**
+Apply advanced Remote Method Invocation (RMI) concepts to fully abstract away the inherent complexity of sending byte streams over the network. RMI allows a program to invoke methods on objects that live in a remote Java Virtual Machine (JVM) as if they were plain local invocations.
+
+**How it works:**
+The system abandons the classic central-server paradigm. The `ChatApp.java` class follows a Peer-to-Peer (P2P) design, acting simultaneously in two indispensable roles:
+- **As a Server:** It implements the shared `ChatService` interface, which extends `java.rmi.Remote` and declares a single remote method, `receiveMessage(String sender, String message)`. During initialization, the application exports its own local instance as a "stub" (a proxy object responsible for serialization) using `UnicastRemoteObject.exportObject(chatApp, 0)`. It then programmatically creates its own registry (`LocateRegistry.createRegistry(localPort)`) on a local port specified dynamically by the user, and binds the stub under the name "ChatService" via `rebind`.
+- **As a Client:** It interactively asks for the desired recipient's data (target IP address and port). Through the static method `LocateRegistry.getRegistry(targetIP, targetPort)`, the application locates the remote JVM's registry and uses the `lookup("ChatService")` function to find the remote object.
+- **Data flow:** Once both interfaces are set up, when the user types a text string into the console, the system does not manage sockets manually. It simply executes the statement `remoteService.receiveMessage(username, msg)`. The Java RMI framework serializes the objects under the hood, transmits them over the network, executes the code on the recipient's remote machine transparently, and produces output on their terminal in real time (including a re-prompt of "Tu mensaje: " so the recipient's input line is not disrupted).
+
+**Execution Instructions:**
+*(For this scenario, using two consoles to simulate separate environments is recommended)*
+1. Go to the `ejercicio6.4.1` directory and compile the class package: `javac ChatService.java ChatApp.java`
+2. In your first console (representing one user, e.g., "Alice"), run the application: `java ChatApp`
+   - **Prompt 1 (Name):** Enter an identifying name (e.g., Alice)
+   - **Prompt 2 (Local Port):** Enter an available port (e.g., 23000)
+   - **Prompt 3 (Target IP):** Enter `127.0.0.1`
+   - *Operational note:* Do not press Enter for the target port prompt until the second client is fully running, or the application will report that it could not connect.
+3. In your second console (representing "Bob"), start a parallel instance: `java ChatApp`
+   - **Prompt 1 (Name):** Enter an identifying name (e.g., Bob)
+   - **Prompt 2 (Local Port):** Enter a different port to avoid collisions (e.g., 23001)
+   - **Prompt 3 (Target IP):** Enter `127.0.0.1`
+   - **Prompt 4 (Target Port):** Enter the port assigned to Alice (`23000`)
+4. Quickly go back to the first console and complete the setup by entering Bob's assigned port (`23001`).
+5. Write and exchange text messages between both terminals. Observe how the complex String parameters travel through the abstract RMI objects to trigger local notifications on the other JVM environment instantly.
+
+> **Evidence Placeholder - Exercise 6.4.1:**
+> [Insert here combined screenshots of both consoles (Alice and Bob) sharing and responding to messages in real time using the RMI architecture]
+> ![Evidence Exercise 6.4.1](./imagenes/ejercicio6.4.1.png)
+
+---
+
+**Project documented for the Software Architecture course.**
